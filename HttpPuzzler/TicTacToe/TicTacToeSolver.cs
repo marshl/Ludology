@@ -52,7 +52,7 @@ namespace HttpPuzzler.TicTacToe
 
         }
 
-        private List<TicTacToeBoard.TicTacToeLine> GetWinnableLinesForPlayer(List<TicTacToeBoard.TicTacToeLine> lines, char player, int size)
+        private List<TicTacToeLine> GetWinnableLinesForPlayer(List<TicTacToeLine> lines, char player, int size)
         {
             return lines.Where(x => x.Cells.Where(c => c.Value == player).Count() == size - 1 && x.Cells.Where(c => c.Value == null).Count() == 1).ToList();
         }

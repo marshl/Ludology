@@ -19,29 +19,9 @@ namespace HttpPuzzler.TicTacToe
             }
         }
 
-        public class TicTacToeColumn
+        public List<TicTacToeCell> GetCellsByPlayer(char player)
         {
-            public List<TicTacToeCell> Cells { get; set; }
-
-            public TicTacToeCell this[int index]
-            {
-                get
-                {
-                    return this.Cells[index];
-                }
-            }
-
-            public class TicTacToeCell
-            {
-                public char? Value { get; set; }
-                public int XIndex { get; set; }
-                public int YIndex { get; set; }
-            }
-        }
-
-        public List<TicTacToeColumn.TicTacToeCell> GetCellsByPlayer(char player)
-        {
-            var cells = new List<TicTacToeColumn.TicTacToeCell>();
+            var cells = new List<TicTacToeCell>();
             this.Columns.ForEach(
                 x => x.Cells.ForEach(
                     y => { if (y.Value == player) cells.Add(y); }
@@ -89,9 +69,31 @@ namespace HttpPuzzler.TicTacToe
             return columnLines;
         }
 
-        public class TicTacToeLine
+       
+    }
+
+    public class TicTacToeColumn
+    {
+        public List<TicTacToeCell> Cells { get; set; }
+
+        public TicTacToeCell this[int index]
         {
-            public List<TicTacToeColumn.TicTacToeCell> Cells = new List<TicTacToeColumn.TicTacToeCell>();
+            get
+            {
+                return this.Cells[index];
+            }
         }
+    }
+
+    public class TicTacToeCell
+    {
+        public char? Value { get; set; }
+        public int XIndex { get; set; }
+        public int YIndex { get; set; }
+    }
+
+    public class TicTacToeLine
+    {
+        public List<TicTacToeCell> Cells = new List<TicTacToeCell>();
     }
 }

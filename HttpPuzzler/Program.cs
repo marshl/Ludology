@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using HttpPuzzler.TicTacToe;
 
 namespace HttpPuzzler
 {
@@ -10,15 +7,15 @@ namespace HttpPuzzler
     {
         static void Main(string[] args)
         {
-            TicTacToe.TicTacToeBoard board = new TicTacToe.TicTacToeBoard();
-            board.Columns = new List<TicTacToe.TicTacToeBoard.TicTacToeColumn>();
+            TicTacToeBoard board = new TicTacToeBoard();
+            board.Columns = new List<TicTacToeColumn>();
             for (int x = 0; x < 3; ++x)
             {
-                board.Columns.Add(new TicTacToe.TicTacToeBoard.TicTacToeColumn());
-                board[x].Cells = new List<TicTacToe.TicTacToeBoard.TicTacToeColumn.TicTacToeCell>();
+                board.Columns.Add(new TicTacToeColumn());
+                board[x].Cells = new List<TicTacToeCell>();
                 for (int y = 0; y < 3; ++y)
                 {
-                    var c = new TicTacToe.TicTacToeBoard.TicTacToeColumn.TicTacToeCell();
+                    var c = new TicTacToeCell();
                     c.XIndex = x;
                     c.YIndex = y;
                     board[x].Cells.Add(c);

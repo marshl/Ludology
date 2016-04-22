@@ -38,13 +38,13 @@ namespace HttpPuzzler.TicTacToe
 
             var lineList = this.Board.GetAllLines();
 
-            var winnableLines = GetWinnableLinesForPlayer(lineList, 'X', this.Board.Columns.Count);
+            var winnableLines = GetWinnableLinesForPlayer(lineList, 'X');
             if ( winnableLines.Count > 0 )
             {
                 Console.WriteLine("going for win");
             }
 
-            var loseableLines = GetWinnableLinesForPlayer(lineList, 'O', this.Board.Columns.Count);
+            var loseableLines = GetWinnableLinesForPlayer(lineList, 'O');
             if (loseableLines.Count > 0)
             {
                 Console.WriteLine("preventing loss");
@@ -52,9 +52,9 @@ namespace HttpPuzzler.TicTacToe
 
         }
 
-        private List<TicTacToeLine> GetWinnableLinesForPlayer(List<TicTacToeLine> lines, char player, int size)
+        private List<TicTacToeLine> GetWinnableLinesForPlayer(List<TicTacToeLine> lines, char player)
         {
-            return lines.Where(x => x.Cells.Where(c => c.Value == player).Count() == size - 1 && x.Cells.Where(c => c.Value == null).Count() == 1).ToList();
+            return lines.Where(x => x.CanBeWonByPlayer(player)).ToList();
         }
     }
 }

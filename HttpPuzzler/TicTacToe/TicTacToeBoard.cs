@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HttpPuzzler.TicTacToe
 {
@@ -95,5 +92,16 @@ namespace HttpPuzzler.TicTacToe
     public class TicTacToeLine
     {
         public List<TicTacToeCell> Cells = new List<TicTacToeCell>();
+
+        public bool CanBeWonByPlayer(char player)
+        {
+            return this.Cells.Where(c => c.Value == player).Count() == this.Cells.Count - 1
+                && this.Cells.Where(c => c.Value == null).Count() == 1;
+        }
+
+        public bool IsWinnableByPlayer(char player)
+        {
+            return this.Cells.Where(c => (c.Value ?? player) != player).Count() == 0;
+        }
     }
 }

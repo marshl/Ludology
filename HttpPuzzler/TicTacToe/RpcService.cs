@@ -10,13 +10,13 @@ namespace HttpPuzzler.TicTacToe
     class RpcService : JsonRpcService
     {
         [JsonRpcMethod("TicTacToe.NextMove")]
-        private object TicTacToeNextMove(int gameid, string mark, string[] gamestate)
+        private Dictionary<string, int> TicTacToeNextMove(int gameid, string mark, string[] gamestate)
         {
             TicTacToeBoard board = new TicTacToeBoard(gamestate);
             TicTacToeSolver solver = new TicTacToeSolver(board);
-            solver.Solve(mark);
+            int result = solver.Solve(mark);
 
-            return new Dictionary<string, int>() { { "position", 1} };
+            return new Dictionary<string, int>() { { "position", result } };
         }
     }
 }

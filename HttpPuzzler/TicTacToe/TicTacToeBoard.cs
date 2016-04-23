@@ -11,13 +11,18 @@ namespace HttpPuzzler.TicTacToe
 
         public TicTacToeBoard(string[] gameState)
         {
+            if (gameState.Length == 0)
+            {
+                throw new ArgumentException("The game state must at least one element.");
+            }
+
             this.Size = (int)Math.Floor(Math.Sqrt(gameState.Length));
             if (gameState.Length % this.Size != 0)
             {
                 throw new ArgumentException("Board must be square.");
             }
 
-            for (int x = 0; x < this.Size; ++x)
+            /*for (int x = 0; x < this.Size; ++x)
             {
                 this.Columns.Add(new TicTacToeColumn());
                 this.Columns[x].Cells = new List<TicTacToeCell>();
@@ -29,37 +34,46 @@ namespace HttpPuzzler.TicTacToe
                     c.Value = gameState[x + y * this.Size];
                     this.Columns[x].Cells.Add(c);
                 }
-            }
+            }*/
+
+            this.Cells = gameState.Select((x, i) => new TicTacToeCell(i % Size, i / Size, x)).ToList();
         }
 
-        public List<TicTacToeColumn> Columns { get; set; }
+        public List<TicTacToeCell> Cells { get; set; }
+        //public List<TicTacToeColumn> Columns { get; set; }
 
-        public TicTacToeColumn this[int index]
+        /*public TicTacToeColumn this[int index]
         {
             get
             {
                 return this.Columns[index];
             }
-        }
+        }*/
 
         public List<TicTacToeCell> GetCellsByPlayer(string player)
         {
             var cells = new List<TicTacToeCell>();
-            this.Columns.ForEach(
+            /*this.Columns.ForEach(
                 x => x.Cells.ForEach(
                     y => { if (y.Value == player) cells.Add(y); }
                 )
-            );
+            );*/
+            this.Cells.Where(x => x.Value == player);
 
             return cells;
         }
 
+        public TicTacToeCell GetCell(int x, int y)
+        {
+            return this.Cells[x + this.Size * y];
+        }
+
         public List<TicTacToeLine> GetAllLines()
         {
-            Debug.Assert(this.Columns.Count > 0);
+            /*Debug.Assert(this.Columns.Count > 0);
             Debug.Assert(this.Columns.Count == this.Columns[0].Cells.Count);
-
-            int scale = this.Columns.Count;
+            */
+            //int scale = this.Columns.Count;
 
             var columnLines = new List<TicTacToeLine>();
             var rowLines = new List<TicTacToeLine>();
@@ -67,23 +81,23 @@ namespace HttpPuzzler.TicTacToe
             diagonalLines.Add(new TicTacToeLine());
             diagonalLines.Add(new TicTacToeLine());
 
-            for (int i = 0; i < this.Columns.Count; ++i)
+            for (int i = 0; i < this.Size; ++i)
             {
-                diagonalLines[0].Cells.Add(this[i][i]);
-                diagonalLines[1].Cells.Add(this[i][scale - i - 1]);
+                diagonalLines[0].Cells.Add(this.GetCell(i, i));
+                diagonalLines[1].Cells.Add(this.GetCell(i, this.Size - i - 1));
             }
 
-            for (int x = 0; x < scale; ++x)
+            for (int x = 0; x < this.Size; ++x)
             {
                 columnLines.Add(new TicTacToeLine());
                 rowLines.Add(new TicTacToeLine());
             }
-            for (int x = 0; x < scale; ++x)
+            for (int x = 0; x < this.Size; ++x)
             {
-                for (int y = 0; y < scale; ++y)
+                for (int y = 0; y < this.Size; ++y)
                 {
-                    columnLines[x].Cells.Add(this[x][y]);
-                    rowLines[y].Cells.Add(this[x][y]);
+                    columnLines[x].Cells.Add(this.GetCell(x,y));
+                    rowLines[y].Cells.Add(this.GetCell(x,y));
                 }
             }
 
@@ -95,7 +109,7 @@ namespace HttpPuzzler.TicTacToe
 
     }
 
-    public class TicTacToeColumn
+    /*public class TicTacToeColumn
     {
         public List<TicTacToeCell> Cells { get; set; }
 
@@ -106,15 +120,24 @@ namespace HttpPuzzler.TicTacToe
                 return this.Cells[index];
             }
         }
-    }
+    }*/
 
     public class TicTacToeCell
     {
-        public string Value { get; set; }
-        public int XIndex { get; set; }
-        public int YIndex { get; set; }
+        public string Value { get; }
+        public int XIndex { get; }
+        public int YIndex { get; }
 
         public int WinningLineCount { get; set; }
+
+        public int AdjacentCellCount { get; set; }
+
+        public TicTacToeCell(int x, int y, string value)
+        {
+            this.Value = value;
+            this.XIndex = x;
+            this.YIndex = y;
+        }
     }
 
     public class TicTacToeLine

@@ -12,6 +12,12 @@ namespace HttpPuzzler
 
         static int Main(string[] args)
         {
+            /*var solver = new TicTacToe.TicTacToeSolver(new TicTacToe.TicTacToeBoard(new string[] {
+                "O", "X", "O",
+                null, null, null,
+                null, null, "X" }));
+            var place = solver.Solve("X");*/
+
             // must new up an instance of the service so it can be registered to handle requests.
             globalRpcService = new GlobalRpcService();
             ticTacToeService = new TicTacToe.RpcService();

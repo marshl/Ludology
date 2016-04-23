@@ -14,15 +14,12 @@ namespace HttpPuzzler.TicTacToe
         public TicTacToeSolver(TicTacToeBoard board)
         {
             this.Board = board;
-            Debug.Assert(this.Board.Columns.Count > 0);
-            Debug.Assert(this.Board.Columns.Count == this.Board[0].Cells.Count);
-            var v = this.Board.GetAllLines();
         }
 
         public int Solve(string player)
         {
             TicTacToeCell c = this.GetBestCell(player);
-            return c.XIndex + this.Board.Size * c.YIndex;
+            return c != null ? c.XIndex + this.Board.Size * c.YIndex : -1;
 
         }
 
@@ -52,10 +49,15 @@ namespace HttpPuzzler.TicTacToe
 
             foreach (TicTacToeLine line in lineList)
             {
-                if (line.CanBeWonByPlayer(player))
+                if (line.IsWinnableByPlayer(player))
                 {
                     line.Cells.ForEach(x => ++x.WinningLineCount);
                 }
+            }
+
+            foreach(TicTacToeCell cell in this.Board.Cells)
+            {
+                cell.AdjacentCellCount += Board.Cells.Count(x => (x.XIndex == cell.XIndex || x.YIndex == cell.YIndex) && x.Value != null);
             }
 
             var winnableLines = GetWinnableLinesForPlayer(lineList, "X");
@@ -73,7 +75,10 @@ namespace HttpPuzzler.TicTacToe
                 return loseableLines[0].GetFirstFreeCell();
             }
 
-            return null;
+            return this.Board.Cells.Where(x => x.Value == null)
+                .OrderByDescending(x => x.AdjacentCellCount)
+                .OrderByDescending(x => x.WinningLineCount)
+                .First();
         }
 
     }

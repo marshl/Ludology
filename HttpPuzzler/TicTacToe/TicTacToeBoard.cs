@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -41,7 +42,7 @@ namespace HttpPuzzler.TicTacToe
             }
         }
 
-        public List<TicTacToeCell> GetCellsByPlayer(char player)
+        public List<TicTacToeCell> GetCellsByPlayer(string player)
         {
             var cells = new List<TicTacToeCell>();
             this.Columns.ForEach(
@@ -78,7 +79,7 @@ namespace HttpPuzzler.TicTacToe
                 rowLines.Add(new TicTacToeLine());
             }
             for (int x = 0; x < scale; ++x)
-            { 
+            {
                 for (int y = 0; y < scale; ++y)
                 {
                     columnLines[x].Cells.Add(this[x][y]);
@@ -91,7 +92,7 @@ namespace HttpPuzzler.TicTacToe
             return columnLines;
         }
 
-       
+
     }
 
     public class TicTacToeColumn
@@ -109,24 +110,31 @@ namespace HttpPuzzler.TicTacToe
 
     public class TicTacToeCell
     {
-        public char? Value { get; set; }
+        public string Value { get; set; }
         public int XIndex { get; set; }
         public int YIndex { get; set; }
+
+        public int WinningLineCount { get; set; }
     }
 
     public class TicTacToeLine
     {
         public List<TicTacToeCell> Cells = new List<TicTacToeCell>();
 
-        public bool CanBeWonByPlayer(char player)
+        public bool CanBeWonByPlayer(string player)
         {
             return this.Cells.Where(c => c.Value == player).Count() == this.Cells.Count - 1
                 && this.Cells.Where(c => c.Value == null).Count() == 1;
         }
 
-        public bool IsWinnableByPlayer(char player)
+        public bool IsWinnableByPlayer(string player)
         {
             return this.Cells.Where(c => (c.Value ?? player) != player).Count() == 0;
+        }
+
+        public TicTacToeCell GetFirstFreeCell()
+        {
+            return this.Cells.First(x => x.Value == null);
         }
     }
 }

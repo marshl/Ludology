@@ -14,7 +14,7 @@ namespace HttpPuzzler.TicTacToe
         {
             TicTacToeBoard board = new TicTacToeBoard(gamestate);
             TicTacToeSolver solver = new TicTacToeSolver(board);
-            solver.Solve();
+            solver.Solve(mark);
 
             return new Dictionary<string, int>() { { "position", 1} };
         }

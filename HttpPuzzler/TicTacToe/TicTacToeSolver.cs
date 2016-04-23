@@ -19,8 +19,20 @@ namespace HttpPuzzler.TicTacToe
             var v = this.Board.GetAllLines();
         }
 
-        public void Solve()
+        public int Solve(string player)
         {
+            TicTacToeCell c = this.GetBestCell(player);
+            return c.XIndex + this.Board.Size * c.YIndex;
+
+        }
+
+        private List<TicTacToeLine> GetWinnableLinesForPlayer(List<TicTacToeLine> lines, string player)
+        {
+            return lines.Where(x => x.CanBeWonByPlayer(player)).ToList();
+        }
+
+        private TicTacToeCell GetBestCell(string player)
+        { 
             /*if (Board.GetCellsByPlayer('X').Count == 0)
             {
                 this.PickCornerCell();
@@ -38,23 +50,31 @@ namespace HttpPuzzler.TicTacToe
 
             var lineList = this.Board.GetAllLines();
 
-            var winnableLines = GetWinnableLinesForPlayer(lineList, 'X');
-            if ( winnableLines.Count > 0 )
+            foreach (TicTacToeLine line in lineList)
             {
-                Console.WriteLine("going for win");
+                if (line.CanBeWonByPlayer(player))
+                {
+                    line.Cells.ForEach(x => ++x.WinningLineCount);
+                }
             }
 
-            var loseableLines = GetWinnableLinesForPlayer(lineList, 'O');
+            var winnableLines = GetWinnableLinesForPlayer(lineList, "X");
+            if (winnableLines.Count > 0)
+            {
+                Console.WriteLine("going for win");
+                return winnableLines[0].GetFirstFreeCell();
+                //winnableLines.Max( x=> x.)
+            }
+
+            var loseableLines = GetWinnableLinesForPlayer(lineList, "O");
             if (loseableLines.Count > 0)
             {
                 Console.WriteLine("preventing loss");
+                return loseableLines[0].GetFirstFreeCell();
             }
 
+            return null;
         }
 
-        private List<TicTacToeLine> GetWinnableLinesForPlayer(List<TicTacToeLine> lines, char player)
-        {
-            return lines.Where(x => x.CanBeWonByPlayer(player)).ToList();
-        }
     }
 }

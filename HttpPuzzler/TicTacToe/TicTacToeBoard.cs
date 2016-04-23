@@ -6,9 +6,29 @@ namespace HttpPuzzler.TicTacToe
 {
     class TicTacToeBoard
     {
+        public int Size { get; }
+
         public TicTacToeBoard(string[] gameState)
         {
+            this.Size = (int)Math.Floor(Math.Sqrt(gameState.Length));
+            if (gameState.Length % this.Size != 0)
+            {
+                throw new ArgumentException("Board must be square.");
+            }
 
+            for (int x = 0; x < this.Size; ++x)
+            {
+                this.Columns.Add(new TicTacToeColumn());
+                this.Columns[x].Cells = new List<TicTacToeCell>();
+                for (int y = 0; y < this.Size; ++y)
+                {
+                    TicTacToeCell c = new TicTacToeCell();
+                    c.XIndex = x;
+                    c.YIndex = y;
+                    c.Value = gameState[x + y * this.Size];
+                    this.Columns[x].Cells.Add(c);
+                }
+            }
         }
 
         public List<TicTacToeColumn> Columns { get; set; }

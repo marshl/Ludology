@@ -6,6 +6,11 @@ namespace HttpPuzzler.TicTacToe
 {
     class TicTacToeBoard
     {
+        public TicTacToeBoard(string[] gameState)
+        {
+
+        }
+
         public List<TicTacToeColumn> Columns { get; set; }
 
         public TicTacToeColumn this[int index]

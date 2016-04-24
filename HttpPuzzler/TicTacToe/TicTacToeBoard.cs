@@ -1,14 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="TicTacToeBoard.cs" company="marshl">
+// Copyright 2016, Liam Marshall, marshl.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace HttpPuzzler.TicTacToe
 {
-    class TicTacToeBoard
-    {
-        public int Size { get; }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
+    /// <summary>
+    /// The game state of a tic-tac-toe game
+    /// </summary>
+    public class TicTacToeBoard
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TicTacToeBoard"/> class.
+        /// </summary>
+        /// <param name="gameState">The array of game state to initialize with.</param>
         public TicTacToeBoard(string[] gameState)
         {
             if (gameState.Length == 0)
@@ -22,142 +42,85 @@ namespace HttpPuzzler.TicTacToe
                 throw new ArgumentException("Board must be square.");
             }
 
-            /*for (int x = 0; x < this.Size; ++x)
-            {
-                this.Columns.Add(new TicTacToeColumn());
-                this.Columns[x].Cells = new List<TicTacToeCell>();
-                for (int y = 0; y < this.Size; ++y)
-                {
-                    TicTacToeCell c = new TicTacToeCell();
-                    c.XIndex = x;
-                    c.YIndex = y;
-                    c.Value = gameState[x + y * this.Size];
-                    this.Columns[x].Cells.Add(c);
-                }
-            }*/
-
-            this.Cells = gameState.Select((x, i) => new TicTacToeCell(i % Size, i / Size, x)).ToList();
+            // Create a new TicTacToeCell for each element in the gamestate
+            this.Cells = gameState.Select((x, i) => new TicTacToeCell(i % this.Size, i / this.Size, x)).ToArray();
         }
 
-        public List<TicTacToeCell> Cells { get; set; }
-        //public List<TicTacToeColumn> Columns { get; set; }
+        /// <summary>
+        /// Gets the height and width of the board
+        /// </summary>
+        public int Size { get; }
 
-        /*public TicTacToeColumn this[int index]
-        {
-            get
-            {
-                return this.Columns[index];
-            }
-        }*/
+        /// <summary>
+        /// Gets the table of cells as a flat array.
+        /// </summary>
+        public TicTacToeCell[] Cells { get; }
 
+        /// <summary>
+        /// Gets the cells owned by the given player.
+        /// </summary>
+        /// <param name="player">The player to search for.</param>
+        /// <returns>The list of cells owned by the given player.</returns>
         public List<TicTacToeCell> GetCellsByPlayer(string player)
         {
-            var cells = new List<TicTacToeCell>();
-            /*this.Columns.ForEach(
-                x => x.Cells.ForEach(
-                    y => { if (y.Value == player) cells.Add(y); }
-                )
-            );*/
-            this.Cells.Where(x => x.Value == player);
-
-            return cells;
+            return this.Cells.Where(x => x.Mark == player).ToList();
         }
 
+        /// <summary>
+        /// Gets the cell at the given position.
+        /// </summary>
+        /// <param name="x">The x index of the cell.</param>
+        /// <param name="y">The y index of the cell.</param>
+        /// <returns>The cell at the given position.</returns>
         public TicTacToeCell GetCell(int x, int y)
         {
-            return this.Cells[x + this.Size * y];
+            if (x < 0 || x > this.Size || y < 0 || y > this.Size)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            return this.Cells[x + (y * this.Size)];
         }
 
+        /// <summary>
+        /// Gets all lines in the board.
+        /// </summary>
+        /// <returns>The list of lines</returns>
         public List<TicTacToeLine> GetAllLines()
         {
-            /*Debug.Assert(this.Columns.Count > 0);
-            Debug.Assert(this.Columns.Count == this.Columns[0].Cells.Count);
-            */
-            //int scale = this.Columns.Count;
-
-            var columnLines = new List<TicTacToeLine>();
-            var rowLines = new List<TicTacToeLine>();
             var diagonalLines = new List<TicTacToeLine>();
             diagonalLines.Add(new TicTacToeLine());
             diagonalLines.Add(new TicTacToeLine());
 
+            // Find the two diagonal lines
             for (int i = 0; i < this.Size; ++i)
             {
                 diagonalLines[0].Cells.Add(this.GetCell(i, i));
                 diagonalLines[1].Cells.Add(this.GetCell(i, this.Size - i - 1));
             }
 
+            // Find the row and column lines
+            var columnLines = new List<TicTacToeLine>();
+            var rowLines = new List<TicTacToeLine>();
             for (int x = 0; x < this.Size; ++x)
             {
                 columnLines.Add(new TicTacToeLine());
                 rowLines.Add(new TicTacToeLine());
             }
+
             for (int x = 0; x < this.Size; ++x)
             {
                 for (int y = 0; y < this.Size; ++y)
                 {
-                    columnLines[x].Cells.Add(this.GetCell(x,y));
-                    rowLines[y].Cells.Add(this.GetCell(x,y));
+                    columnLines[x].Cells.Add(this.GetCell(x, y));
+                    rowLines[y].Cells.Add(this.GetCell(x, y));
                 }
             }
 
+            // Combine the lists and return them
             columnLines.AddRange(rowLines);
             columnLines.AddRange(diagonalLines);
             return columnLines;
-        }
-
-
-    }
-
-    /*public class TicTacToeColumn
-    {
-        public List<TicTacToeCell> Cells { get; set; }
-
-        public TicTacToeCell this[int index]
-        {
-            get
-            {
-                return this.Cells[index];
-            }
-        }
-    }*/
-
-    public class TicTacToeCell
-    {
-        public string Value { get; }
-        public int XIndex { get; }
-        public int YIndex { get; }
-
-        public int WinningLineCount { get; set; }
-
-        public int AdjacentCellCount { get; set; }
-
-        public TicTacToeCell(int x, int y, string value)
-        {
-            this.Value = value;
-            this.XIndex = x;
-            this.YIndex = y;
-        }
-    }
-
-    public class TicTacToeLine
-    {
-        public List<TicTacToeCell> Cells = new List<TicTacToeCell>();
-
-        public bool CanBeWonByPlayer(string player)
-        {
-            return this.Cells.Where(c => c.Value == player).Count() == this.Cells.Count - 1
-                && this.Cells.Where(c => c.Value == null).Count() == 1;
-        }
-
-        public bool IsWinnableByPlayer(string player)
-        {
-            return this.Cells.Where(c => (c.Value ?? player) != player).Count() == 0;
-        }
-
-        public TicTacToeCell GetFirstFreeCell()
-        {
-            return this.Cells.First(x => x.Value == null);
         }
     }
 }

@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Ludophile
+namespace Ludology
 {
     using System;
     using System.Collections.Generic;

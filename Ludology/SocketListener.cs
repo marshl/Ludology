@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Ludophile
+namespace Ludology
 {
     public class SocketListener
     {

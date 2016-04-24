@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Ludophile.TicTacToe
+namespace Ludology.TicTacToe
 {
     /// <summary>
     /// A single cell in a TicTacToeBoard

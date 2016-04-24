@@ -29,22 +29,7 @@ namespace HttpPuzzler.TicTacToe
         }
 
         private TicTacToeCell GetBestCell(string player)
-        { 
-            /*if (Board.GetCellsByPlayer('X').Count == 0)
-            {
-                this.PickCornerCell();
-            }
-
-            if winnable then win
-
-            if opponent can win then prevent
-
-                pick a spot that has the most possibilities of winning (count the number of wins that spot could help with and find the highest)
-
-            if no cell, pick corner at random
-
-            else choose cell that blocks most opponents moves */
-
+        {
             var lineList = this.Board.GetAllLines();
 
             foreach (TicTacToeLine line in lineList)
@@ -65,7 +50,6 @@ namespace HttpPuzzler.TicTacToe
             {
                 Console.WriteLine("going for win");
                 return winnableLines[0].GetFirstFreeCell();
-                //winnableLines.Max( x=> x.)
             }
 
             var loseableLines = GetWinnableLinesForPlayer(lineList, "O");

@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using System.Diagnostics;
 
-namespace HttpPuzzler
+namespace Ludophile
 {
     public class JsonRpcClient
     {

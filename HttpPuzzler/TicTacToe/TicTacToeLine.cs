@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace HttpPuzzler.TicTacToe
+namespace Ludophile.TicTacToe
 {
     using System.Collections.Generic;
     using System.Linq;

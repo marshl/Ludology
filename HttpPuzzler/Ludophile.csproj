@@ -7,8 +7,8 @@
     <ProjectGuid>{1BC0F307-76D6-4C3B-993C-06A565EBBA55}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HttpPuzzler</RootNamespace>
-    <AssemblyName>HttpPuzzler</AssemblyName>
+    <RootNamespace>Ludophile</RootNamespace>
+    <AssemblyName>Ludophile</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

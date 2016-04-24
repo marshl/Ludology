@@ -14,7 +14,7 @@
 // limitations under the License.
 // </copyright>
 //-----------------------------------------------------------------------
-namespace HttpPuzzler
+namespace Ludophile
 {
     using System;
     using System.Collections.Generic;

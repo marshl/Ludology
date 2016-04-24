@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using AustinHarris.JsonRpc;
 
 namespace HttpPuzzler.TicTacToe
@@ -17,6 +13,19 @@ namespace HttpPuzzler.TicTacToe
             int result = solver.Solve(mark);
 
             return new Dictionary<string, int>() { { "position", result } };
+        }
+
+
+        [JsonRpcMethod("TicTacToe.Complete")]
+        private void OnCompletion(int gameid, bool winner, string mark, string[] gamestate)
+        {
+
+        }
+
+        [JsonRpcMethod("TicTacToe.Error")]
+        private void OnError(int gameid, string message, int errorcode)
+        {
+
         }
     }
 }

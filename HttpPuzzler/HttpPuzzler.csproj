@@ -73,11 +73,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RpcClient.cs" />
-    <Compile Include="SocketListener.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="RpcClient.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="SocketListener.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="TicTacToe\RpcService.cs" />
     <Compile Include="TicTacToe\TicTacToeBoard.cs" />
+    <Compile Include="TicTacToe\TicTacToeCell.cs" />
+    <Compile Include="TicTacToe\TicTacToeLine.cs" />
     <Compile Include="TicTacToe\TicTacToeSolver.cs" />
   </ItemGroup>
   <ItemGroup>

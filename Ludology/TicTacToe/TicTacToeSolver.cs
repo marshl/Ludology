@@ -63,12 +63,9 @@ namespace Ludology.TicTacToe
 
             var lineList = this.Board.GetAllLines();
 
-            foreach (TicTacToeLine line in lineList)
+            foreach (TicTacToeLine line in lineList.Where(x => x.IsWinnableByPlayer(player)))
             {
-                if (line.IsWinnableByPlayer(player))
-                {
-                    line.Cells.ForEach(x => ++x.WinningLineCount);
-                }
+                line.Cells.ForEach(x => ++x.WinningLineCount);
             }
 
             // Finds the adjacent cell count for all cells

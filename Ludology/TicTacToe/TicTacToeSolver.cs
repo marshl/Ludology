@@ -55,6 +55,12 @@ namespace Ludology.TicTacToe
         /// <returns>The cell that is best for the player.</returns>
         private TicTacToeCell GetBestCell(string player)
         {
+            // If no cells have been marked yet, then pick the top left corner
+            if (this.Board.Cells.Count(x => x.Mark != null) == 0)
+            {
+                return this.Board.Cells[0];
+            }
+
             var lineList = this.Board.GetAllLines();
 
             foreach (TicTacToeLine line in lineList)

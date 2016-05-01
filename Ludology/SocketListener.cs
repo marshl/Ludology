@@ -10,7 +10,7 @@ namespace Ludology
     {
         public static void start(int listenPort, Action<StreamWriter, string> handleRequest)
         {
-            var server = new TcpListener(IPAddress.Parse("127.0.0.1"), listenPort);
+            var server = new TcpListener(IPAddress.Parse("0.0.0.0"), listenPort);
             server.Start();
             Console.WriteLine($"You can connected with Putty on a (RAW session) to {server.LocalEndpoint} to issue JsonRpc requests.");
             while (true)

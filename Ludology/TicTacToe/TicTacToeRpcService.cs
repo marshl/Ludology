@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="RpcService.cs" company="marshl">
+// <copyright file="TicTacToeRpcService.cs" company="marshl">
 // Copyright 2016, Liam Marshall, marshl.
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,19 +58,29 @@ namespace Ludology.TicTacToe
         [JsonRpcMethod("TicTacToe.NextMove")]
         private Dictionary<string, int> OnNextMove(int gameid, string mark, string[] gamestate)
         {
-            if (mark != "X" && mark != "O")
+            char playerMark;
+            if (mark == null || mark.Length != 1)
             {
-                throw new ArgumentException("Mark must be either 'O' or 'X'");
+                throw new ArgumentException("The player mark must be a single character.");
             }
 
-            if (gamestate.Count(x => x == null) == 0)
+            playerMark = mark[0];
+
+            if (gamestate == null || gamestate.Count(x => x != null && x.Length != 1) > 0)
+            {
+                throw new ArgumentException("The game state must only contain single char strings.");
+            }
+
+            if (gamestate.Count(x => string.IsNullOrEmpty(x)) == 0)
             {
                 throw new ArgumentException("The game state must contain at least one empty cell.");
             }
 
-            TicTacToeBoard board = new TicTacToeBoard(gamestate);
+            char[] charBoard = (from str in gamestate
+                                select str[0]).ToArray();
+            TicTacToeBoard board = new TicTacToeBoard(charBoard);
             TicTacToeSolver solver = new TicTacToeSolver(board);
-            int result = solver.Solve(mark);
+            int result = solver.Solve(playerMark);
 
             return new Dictionary<string, int>() { { "position", result } };
         }

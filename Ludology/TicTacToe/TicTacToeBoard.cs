@@ -29,7 +29,7 @@ namespace Ludology.TicTacToe
         /// Initializes a new instance of the <see cref="TicTacToeBoard"/> class.
         /// </summary>
         /// <param name="gameState">The array of game state to initialize with.</param>
-        public TicTacToeBoard(string[] gameState)
+        public TicTacToeBoard(char[] gameState)
         {
             if (gameState.Length == 0)
             {
@@ -61,7 +61,7 @@ namespace Ludology.TicTacToe
         /// </summary>
         /// <param name="player">The player to search for.</param>
         /// <returns>The list of cells owned by the given player.</returns>
-        public List<TicTacToeCell> GetCellsByPlayer(string player)
+        public List<TicTacToeCell> GetCellsByPlayer(char player)
         {
             return this.Cells.Where(x => x.Mark == player).ToList();
         }

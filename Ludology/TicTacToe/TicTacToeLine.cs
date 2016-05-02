@@ -34,7 +34,7 @@ namespace Ludology.TicTacToe
         /// </summary>
         /// <param name="player">The player to check for.</param>
         /// <returns>True if this line can be won, otherwise false.</returns>
-        public bool CanBeWonByPlayer(string player)
+        public bool CanBeWonByPlayer(char player)
         {
             return this.Cells.Where(c => c.Mark == player).Count() == this.Cells.Count - 1
                 && this.Cells.Where(c => c.Mark == null).Count() == 1;
@@ -45,7 +45,7 @@ namespace Ludology.TicTacToe
         /// </summary>
         /// <param name="player">The player to check for.</param>
         /// <returns>True if the player can win this line, otherwise false</returns>
-        public bool IsWinnableByPlayer(string player)
+        public bool IsWinnableByPlayer(char player)
         {
             return this.Cells.Where(c => (c.Mark ?? player) != player).Count() == 0;
         }

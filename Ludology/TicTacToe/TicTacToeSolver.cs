@@ -16,6 +16,7 @@
 //-----------------------------------------------------------------------
 namespace Ludology.TicTacToe
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -42,7 +43,7 @@ namespace Ludology.TicTacToe
         /// </summary>
         /// <param name="player">The player to find the move for.</param>
         /// <returns>The index to place the cell.</returns>
-        public int Solve(string player)
+        public int Solve(char player)
         {
             TicTacToeCell c = this.GetBestCell(player);
             return c != null ? c.XIndex + (c.YIndex * this.Board.Size) : -1;
@@ -53,7 +54,7 @@ namespace Ludology.TicTacToe
         /// </summary>
         /// <param name="player">The player to find the best move for.</param>
         /// <returns>The cell that is best for the player.</returns>
-        private TicTacToeCell GetBestCell(string player)
+        private TicTacToeCell GetBestCell(char player)
         {
             // If no cells have been marked yet, then pick the top left corner
             if (this.Board.Cells.Count(x => x.Mark != null) == 0)
@@ -81,11 +82,20 @@ namespace Ludology.TicTacToe
                 return winnableLines[0].GetFirstUnmarkedCell();
             }
 
-            // If there is a cell where the opponent can win, the stop them
-            var loseableLines = lineList.Where(x => x.CanBeWonByPlayer(player == "X" ? "O" : "X")).ToArray();
-            if (loseableLines.Length > 0)
+            // Find all opponents that currently have a cell on the board
+            var opponentList = (from cell in this.Board.Cells
+                                where cell.Mark != null
+                                where cell.Mark != player
+                                select cell.Mark).Distinct().ToList();
+
+            // If there is a cell where the opponent can win, then stop them
+            foreach (char opponent in opponentList)
             {
-                return loseableLines[0].GetFirstUnmarkedCell();
+                var loseableLines = lineList.Where(x => x.CanBeWonByPlayer(opponent)).ToArray();
+                if (loseableLines.Length > 0)
+                {
+                    return loseableLines[0].GetFirstUnmarkedCell();
+                }
             }
 
             // Otherwise pick the first empty cell, prefering those with a high number of lines, followed by a high number of adjacent cells

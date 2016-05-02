@@ -27,17 +27,17 @@ namespace Ludology.TicTacToe
         /// <param name="x">The x index of the cell.</param>
         /// <param name="y">The y index of the cell.</param>
         /// <param name="mark">The mark of the cell.</param>
-        public TicTacToeCell(int x, int y, string mark)
+        public TicTacToeCell(int x, int y, char? mark)
         {
-            this.Mark = mark;
             this.XIndex = x;
             this.YIndex = y;
+            this.Mark = mark;
         }
 
         /// <summary>
         /// Gets the mark of the cell.
         /// </summary>
-        public string Mark { get; }
+        public char? Mark { get; }
 
         /// <summary>
         /// Gets the x index of the cell.

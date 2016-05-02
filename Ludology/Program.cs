@@ -21,6 +21,8 @@ namespace Ludology
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Json;
     using AustinHarris.JsonRpc;
 
     /// <summary>
@@ -55,8 +57,10 @@ namespace Ludology
             foreach (Type gameType in listOfGameTypes)
             {
                 GameRpcService game = (GameRpcService)Activator.CreateInstance(gameType);
-                Register(game);
-                listOfGames.Add(game);
+                if (Register(game))
+                {
+                    listOfGames.Add(game);
+                }
             }
 
             var rpcResultHandler = new AsyncCallback(
@@ -85,7 +89,8 @@ namespace Ludology
         /// Registers a game with the server.
         /// </summary>
         /// <param name="game">The game to register.</param>
-        private static void Register(GameRpcService game)
+        /// <returns>Whether the registration was successful or not.</returns>
+        private static bool Register(GameRpcService game)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://8557af3f.ngrok.io/rpc");
             httpWebRequest.ContentType = "application/json";
@@ -101,10 +106,32 @@ namespace Ludology
                 streamWriter.Write(json);
             }
 
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            try
             {
-                var responseText = streamReader.ReadToEnd();
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                MemoryStream stream1 = new MemoryStream();
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(RegistrationResponse));
+                var request = (RegistrationResponse)ser.ReadObject(httpResponse.GetResponseStream());
+                if (request == null)
+                {
+                    Console.WriteLine("No request could be found in the resposne stream.");
+                    return false;
+                }
+                else if (request.Error != null)
+                {
+                    Console.WriteLine($"The server responded with an error message: {request.Error}");
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine($"{game.GameName} was registered successfully: {request.Result.Message}");
+                    return true;
+                }
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine($"An exception occurred when registereing the game {game.GameName}: {ex}");
+                return false;
             }
         }
 
@@ -124,6 +151,50 @@ namespace Ludology
                 r.Add("result", "OK");
                 return r;
             }
+        }
+
+        /// <summary>
+        /// The data contract for the response of a game registration
+        /// </summary>
+        [DataContract]
+        private class RegistrationResponse
+        {
+            /// <summary>
+            /// Gets or sets the result of the response.
+            /// </summary>
+            [DataMember(Name = "result")]
+            public ResponseResult Result { get; set; }
+
+            /// <summary>
+            /// Gets or sets the error message of the response, if an error occurred.
+            /// </summary>
+            [DataMember(Name = "error")]
+            public string Error { get; set; }
+
+            /// <summary>
+            /// Gets or sets the game ID
+            /// </summary>
+            [DataMember(Name = "id")]
+            public int ID { get; set; }
+        }
+
+        /// <summary>
+        /// The data contract for the result of a RegistrationResponse
+        /// </summary>
+        [DataContract(Name = "result")]
+        private class ResponseResult
+        {
+            /// <summary>
+            /// Gets or sets the result of the registration ("OK" if successful)
+            /// </summary>
+            [DataMember(Name = "ping")]
+            public string Ping { get; set; }
+
+            /// <summary>
+            /// Gets or sets a more detailed message if the Ping message is not enough.
+            /// </summary>
+            [DataMember(Name = "message")]
+            public string Message { get; set; }
         }
     }
 }

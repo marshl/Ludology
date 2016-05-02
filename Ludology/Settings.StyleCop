@@ -1,6 +1,7 @@
 <StyleCopSettings Version="105">
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
+      <Value>rpc</Value>
       <Value>Tac</Value>
     </CollectionProperty>
   </GlobalSettings>

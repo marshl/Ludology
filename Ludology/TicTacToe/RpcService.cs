@@ -24,8 +24,30 @@ namespace Ludology.TicTacToe
     /// <summary>
     /// The class to respond to Tic-Tac-Toe JSON requests
     /// </summary>
-    public class RpcService : JsonRpcService
+    public class RpcService : GameRpcService
     {
+        /// <summary>
+        /// Gets the name of the game to register with.
+        /// </summary>
+        public override string GameName
+        {
+            get
+            {
+                return "TICTACTOE";
+            }
+        }
+
+        /// <summary>
+        /// Gets the description of the game to register with.
+        /// </summary>
+        public override string GameDescription
+        {
+            get
+            {
+                return "Some description";
+            }
+        }
+
         /// <summary>
         /// The method for when a next move is required
         /// </summary>

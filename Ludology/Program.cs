@@ -102,21 +102,8 @@ namespace Ludology
 
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string json = @"
-{
-   ""method"": ""RegistrationService.Register"",
-   ""params"": {
-        ""token"": ""11111111111111111111111111111111111111111111111111"",
-       ""botname"": ""Liam's Bot"",
-       ""botversion"": ""0.0.5"",
-       ""game"": """ + gameName + @""",
-       ""rpcendpoint"":""http://5b52b588.ngrok.io"",
-       ""programminglanguage"": ""C# 6.0 / .NET 4.5.2"",
-       ""website"": ""http://github.com/marshl/Ludology"",
-       ""description"": ""{description}""
-   },
-   ""id"": 1
-}";
+                string json = File.ReadAllText("registration.json");
+                json = json.Replace("<GAME_NAME>", "TICTACTOE");
 
                 streamWriter.Write(json);
             }

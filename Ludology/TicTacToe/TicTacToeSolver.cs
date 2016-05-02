@@ -90,8 +90,8 @@ namespace Ludology.TicTacToe
 
             // Otherwise pick the first empty cell, prefering those with a high number of lines, followed by a high number of adjacent cells
             return this.Board.Cells.Where(x => x.Mark == null)
-                .OrderByDescending(x => x.AdjacentCellCount)
                 .OrderByDescending(x => x.WinningLineCount)
+                .ThenBy(x => x.AdjacentCellCount)
                 .First();
         }
     }

@@ -70,8 +70,8 @@ namespace Ludology
                     var result = async.Result;
                     var writer = (StreamWriter)async.AsyncState;
 
-                    writer.WriteAsync(result);
-                    writer.FlushAsync();
+                    writer.Write(result);
+                    writer.Flush();
                 });
 
             SocketListener.start(

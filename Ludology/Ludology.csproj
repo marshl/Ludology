@@ -83,7 +83,7 @@
     <Compile Include="SocketListener.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="TicTacToe\RpcService.cs" />
+    <Compile Include="TicTacToe\TicTacToeRpcService.cs" />
     <Compile Include="TicTacToe\TicTacToeBoard.cs" />
     <Compile Include="TicTacToe\TicTacToeCell.cs" />
     <Compile Include="TicTacToe\TicTacToeLine.cs" />

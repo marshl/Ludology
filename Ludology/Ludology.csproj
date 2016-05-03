@@ -80,6 +80,7 @@
     <Compile Include="RpcClient.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Snap\SnapRpcService.cs" />
     <Compile Include="SocketListener.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>

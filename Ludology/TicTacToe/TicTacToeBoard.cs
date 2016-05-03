@@ -29,7 +29,7 @@ namespace Ludology.TicTacToe
         /// Initializes a new instance of the <see cref="TicTacToeBoard"/> class.
         /// </summary>
         /// <param name="gameState">The array of game state to initialize with.</param>
-        public TicTacToeBoard(char[] gameState)
+        public TicTacToeBoard(char?[] gameState)
         {
             if (gameState.Length == 0)
             {

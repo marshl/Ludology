@@ -52,8 +52,8 @@ namespace Ludology.TicTacToe
         /// The method for when a next move is required
         /// </summary>
         /// <param name="gameid">The ID of the game being played.</param>
-        /// <param name="mark">The player mark (either 'O' or 'X').</param>
-        /// <param name="gamestate">The current board state, as a list of cells (either 'X', 'O' or null).</param>
+        /// <param name="mark">The player mark (should be a single character).</param>
+        /// <param name="gamestate">The current board state, as a list of cells (cam only be single characters or null/empty).</param>
         /// <returns>The position to place the next</returns>
         [JsonRpcMethod("TicTacToe.NextMove")]
         private Dictionary<string, int> OnNextMove(int gameid, string mark, string[] gamestate)
@@ -66,7 +66,7 @@ namespace Ludology.TicTacToe
 
             playerMark = mark[0];
 
-            if (gamestate == null || gamestate.Count(x => x != null && x.Length != 1) > 0)
+            if (gamestate == null || gamestate.Count(x => !string.IsNullOrEmpty(x) && x.Length != 1) > 0)
             {
                 throw new ArgumentException("The game state must only contain single char strings.");
             }
@@ -76,8 +76,8 @@ namespace Ludology.TicTacToe
                 throw new ArgumentException("The game state must contain at least one empty cell.");
             }
 
-            char[] charBoard = (from str in gamestate
-                                select str[0]).ToArray();
+            char?[] charBoard = (from str in gamestate
+                                select string.IsNullOrEmpty(str) ? null : (char?)str[0]).ToArray();
             TicTacToeBoard board = new TicTacToeBoard(charBoard);
             TicTacToeSolver solver = new TicTacToeSolver(board);
             int result = solver.Solve(playerMark);

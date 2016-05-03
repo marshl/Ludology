@@ -31,6 +31,11 @@ namespace Ludology
     public class Program
     {
         /// <summary>
+        /// The port to listen on
+        /// </summary>
+        private const int ListenPort = 8080;
+
+        /// <summary>
         /// The RRC service for global methods.
         /// </summary>
         private static GlobalRpcService globalRpcService;
@@ -42,24 +47,24 @@ namespace Ludology
         /// <returns>The error code.</returns>
         public static int Main(string[] args)
         {
-            // must new up an instance of the service so it can be registered to handle requests.
+            // Create an instance of the service so it can be registered to handle requests.
             globalRpcService = new GlobalRpcService();
 
-            const int ListenPort = 8080;
+            // Find all registerable game classes
+            var gameTypeList = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                                from assemblyType in domainAssembly.GetTypes()
+                                where typeof(GameRpcService).IsAssignableFrom(assemblyType)
+                                where !assemblyType.IsAbstract
+                                select assemblyType).ToArray();
 
-            var listOfGameTypes = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                                   from assemblyType in domainAssembly.GetTypes()
-                                   where typeof(GameRpcService).IsAssignableFrom(assemblyType)
-                                   where !assemblyType.IsAbstract
-                                   select assemblyType).ToArray();
-
-            var listOfGames = new List<GameRpcService>();
-            foreach (Type gameType in listOfGameTypes)
+            // And attempt to register them
+            var gameList = new List<GameRpcService>();
+            foreach (Type gameType in gameTypeList)
             {
                 GameRpcService game = (GameRpcService)Activator.CreateInstance(gameType);
                 if (Register(game))
                 {
-                    listOfGames.Add(game);
+                    gameList.Add(game);
                 }
             }
 

@@ -97,7 +97,7 @@ namespace Ludology
         /// <returns>Whether the registration was successful or not.</returns>
         private static bool Register(GameRpcService game)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://8557af3f.ngrok.io/rpc");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://merknera.com/rpc");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.KeepAlive = false;

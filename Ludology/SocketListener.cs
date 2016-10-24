@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Web;
 
 namespace Ludology
 {
@@ -37,6 +38,22 @@ namespace Ludology
                     Console.WriteLine("RPCServer exception " + e);
                 }
             }
+        }
+    }
+
+    public class Testhandler : IHttpHandler
+    {
+        public bool IsReusable
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public void ProcessRequest(HttpContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 

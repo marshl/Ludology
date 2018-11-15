@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------
 namespace Ludology
 {
-    using AustinHarris.JsonRpc;
+    using Jayrock.JsonRpc;
 
     /// <summary>
     /// Every game must inherit from this class.

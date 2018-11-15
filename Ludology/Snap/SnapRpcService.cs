@@ -22,7 +22,7 @@ namespace Ludology.Snap
     /// <summary>
     /// The RPC service for the Snap game
     /// </summary>
-    public class SnapRpcService : GameRpcService
+   /* public class SnapRpcService/: GameRpcService
     {
         /// <summary>
         /// Gets the description of the game to give to the server.
@@ -69,5 +69,5 @@ namespace Ludology.Snap
 
             return new Dictionary<string, bool>() { { "Snap", false } };
         }
-    }
+    }*/
 }

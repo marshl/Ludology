@@ -21,9 +21,12 @@ namespace Ludology
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Net.Sockets;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
-    using AustinHarris.JsonRpc;
+    using System.Text;
+    using System.Web.Http;
+    using Jayrock.JsonRpc;
 
     /// <summary>
     /// The entry class of the program.
@@ -62,21 +65,55 @@ namespace Ludology
             foreach (Type gameType in gameTypeList)
             {
                 GameRpcService game = (GameRpcService)Activator.CreateInstance(gameType);
-                if (Register(game))
+                //if (Register(game))
                 {
                     gameList.Add(game);
                 }
             }
 
-            var rpcResultHandler = new AsyncCallback(
+            /*
+            var server = new TcpListener(IPAddress.Parse("0.0.0.0"), ListenPort);
+            server.Start();
+            Console.WriteLine($"You can connected with Putty on a (RAW session) to {server.LocalEndpoint} to issue JsonRpc requests.");
+            while (true)
+            {
+                try
+                {
+                    using (var client = server.AcceptTcpClient())
+                    using (var stream = client.GetStream())
+                    {
+                        Console.WriteLine("Client Connected..");
+                        var reader = new StreamReader(stream, Encoding.UTF8);
+                        var writer = new StreamWriter(stream, new UTF8Encoding(false));
+
+                        while (!reader.EndOfStream)
+                        {
+                            var line = reader.ReadLine();
+                            JsonRpcProcessor.Process(line);
+                            Console.WriteLine("REQUEST: {0}", line);
+                        }
+                        writer.Flush();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("RPCServer exception " + e);
+                }
+            }
+            */
+
+            /*var rpcResultHandler = new AsyncCallback(
                 state =>
                 {
                     var async = (JsonRpcStateAsync)state;
                     var result = async.Result;
                     var writer = (StreamWriter)async.AsyncState;
 
-                    writer.Write(result);
-                    writer.Flush();
+                    lock (writer)
+                    {
+                        writer.WriteAsync(result);
+                        writer.FlushAsync();
+                    }
                 });
 
             SocketListener.start(
@@ -86,7 +123,120 @@ namespace Ludology
                     var async = new JsonRpcStateAsync(rpcResultHandler, writer) { JsonRpc = line };
                     JsonRpcProcessor.Process(async, writer);
                 });
+                */
 
+            //var service = new MyService();
+            //var dispatchers = new List<JsonRpcDispatcher>();
+            //dispatchers.Add(JsonRpcDispatcherFactory.CreateDispatcher(globalRpcService));
+            /*foreach ( var service in gameList)
+            {
+                dispatchers.Add(JsonRpcDispatcherFactory.CreateDispatcher(service));
+            }*/
+            var dispatcher = JsonRpcDispatcherFactory.CreateDispatcher(globalRpcService);
+
+            var hs = new HttpListener();
+            hs.Prefixes.Add("http://localhost:4521/");
+            hs.Start();
+
+            while (true)
+            {
+                var context = hs.GetContext();
+                var response = context.Response;
+            }
+            
+            var server = new TcpListener(IPAddress.Parse("0.0.0.0"), 4521);
+            server.Start();
+            //var socket = server.AcceptSocket();
+            //new NetworkStream(server.AcceptSocket());
+            /*var server = new HttpListener();
+            server.Prefixes.Add("https://0.0.0.0:8080/bot/");
+            server.Start();*/
+            //Console.WriteLine($"You can connected with Putty on a (RAW session) to {server.LocalEndpoint} to issue JsonRpc requests.");
+            
+            while (true)
+            {
+                try
+                {
+                    using (var client = server.AcceptTcpClient())
+                    using (var stream = client.GetStream())
+                    {
+                        Console.WriteLine("Client Connected..");
+                        //var reader = new StreamReader(stream, Encoding.UTF8);
+                        var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                        
+                        //while (!reader.EndOfStream)
+                        while(stream.DataAvailable)
+                        {
+                            Byte[] bytes = new Byte[client.Available];
+
+                            stream.Read(bytes, 0, bytes.Length);
+
+                            char[] chars = Encoding.UTF8.GetString(bytes).ToCharArray();
+                            /*var line = reader.ReadLine();
+                            Console.WriteLine("REQUEST: {0}", line);
+                            string result = dispatcher.Process(line);
+                            Console.WriteLine($"RESULT: {result}");*/
+                        }
+
+                        writer.Flush();
+                        client.Close();
+                    }
+
+                    /*TcpClient client = server.AcceptTcpClient();
+                    var stream = client.GetStream();
+                    var reader = new StreamReader(stream);//, Encoding.UTF8);
+                    var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                    string content = "", line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        content += reader.ReadLine();
+                    }
+                    //dispatcher.Process(reader, writer);
+                    string result = dispatcher.Process(content);
+                    client.Close();*/
+                    /*//var v = server.GetContext();
+                    using (var client = server.AcceptTcpClient())
+                    //using(var v = server.GetContext())
+                    using (var stream = client.GetStream())
+                    {
+
+                        Console.WriteLine("Client Connected..");
+                        var reader = new StreamReader(stream, Encoding.UTF8);
+                        var writer = new StreamWriter(stream, new UTF8Encoding(false));
+                        //string contents = reader.ReadToEnd();
+
+                        dispatcher.Process(reader, writer);
+                        //dispatchers.ForEach(x => writer.Write(x.Process(contents)));
+                        //dispatcher.Process(reader, writer);
+                        writer.Flush();
+                        /*while (!reader.EndOfStream)
+                        {
+                            var line = reader.ReadLine();
+                            handleRequest(writer, line);
+                            Console.WriteLine("REQUEST: {0}", line);
+                        }* /
+                        //client.Close();
+                        //client.
+                    }*/
+                    /*
+                    using (var socket = server.AcceptSocket())
+                    using (var stream = new NetworkStream(socket))
+                    {
+                        var reader = new StreamReader(stream);
+                        var writer = new StreamWriter(stream);
+
+                        dispatcher.Process(reader, writer);
+                        writer.Flush();
+                        stream.Flush();
+                        stream.Close();
+                    }
+                    */
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("RPCServer exception " + e);
+                }
+            }
             return 0;
         }
 
@@ -97,7 +247,7 @@ namespace Ludology
         /// <returns>Whether the registration was successful or not.</returns>
         private static bool Register(GameRpcService game)
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://8557af3f.ngrok.io/rpc");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://7c5de374.ngrok.io/rpc");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
             httpWebRequest.KeepAlive = false;

@@ -5,7 +5,7 @@
        "botname": "Liam's Bot",
        "botversion": "0.0.5",
        "game": "<GAME_NAME>",
-       "rpcendpoint":"http://5b52b588.ngrok.io",
+       "rpcendpoint":"http://6f2a8e22.ngrok.io",
        "programminglanguage": "C# 6.0 / .NET 4.5.2",
        "website": "http://github.com/marshl/Ludology",
        "description": "<GAME_DESCRIPTION>"

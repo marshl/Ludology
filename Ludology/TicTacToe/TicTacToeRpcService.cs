@@ -76,13 +76,20 @@ namespace Ludology.TicTacToe
                 throw new ArgumentException("The game state must contain at least one empty cell.");
             }
 
-            char?[] charBoard = (from str in gamestate
-                                select string.IsNullOrEmpty(str) ? null : (char?)str[0]).ToArray();
-            TicTacToeBoard board = new TicTacToeBoard(charBoard);
-            TicTacToeSolver solver = new TicTacToeSolver(board);
-            int result = solver.Solve(playerMark);
+            try
+            {
+                char?[] charBoard = (from str in gamestate
+                                     select string.IsNullOrEmpty(str) ? null : (char?)str[0]).ToArray();
+                TicTacToeBoard board = new TicTacToeBoard(charBoard);
+                TicTacToeSolver solver = new TicTacToeSolver(board);
+                int result = solver.Solve(playerMark);
 
-            return new Dictionary<string, int>() { { "position", result } };
+                return new Dictionary<string, int>() { { "position", result } };
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         /// <summary>

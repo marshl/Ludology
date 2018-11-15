@@ -30,6 +30,9 @@ namespace Ludology
                             handleRequest(writer, line);
                             Console.WriteLine("REQUEST: {0}", line);
                         }
+
+                        writer.Flush();
+                        client.Close();
                     }
                 }
                 catch (Exception e)
